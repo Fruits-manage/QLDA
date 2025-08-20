@@ -328,6 +328,101 @@ class CustomerDeleteView(LoginRequiredMixin, DeleteView):
     model = Customer
     success_url = reverse_lazy('management:customer_list')
 
+# Farmer Views
+from .models import Farmer
+
+class FarmerListView(LoginRequiredMixin, ListView):
+    """Danh sách nông dân"""
+    model = Farmer
+    template_name = 'management/farmer_list.html'
+    context_object_name = 'farmers'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = Farmer.objects.all()
+
+        # Search
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) |
+                Q(farmer_code__icontains=search) |
+                Q(phone__icontains=search) |
+                Q(email__icontains=search)
+            )
+
+        # Filters
+        farm_type = self.request.GET.get('farm_type')
+        if farm_type:
+            queryset = queryset.filter(farm_type=farm_type)
+
+        status = self.request.GET.get('status')
+        if status == 'active':
+            queryset = queryset.filter(is_active=True)
+        elif status == 'inactive':
+            queryset = queryset.filter(is_active=False)
+
+        return queryset.order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_farmers'] = Farmer.objects.count()
+        context['active_farmers'] = Farmer.objects.filter(is_active=True).count()
+        context['small_farms'] = Farmer.objects.filter(farm_type='small').count()
+        context['medium_farms'] = Farmer.objects.filter(farm_type='medium').count()
+        context['large_farms'] = Farmer.objects.filter(farm_type='large').count()
+        return context
+
+
+class FarmerCreateView(LoginRequiredMixin, CreateView):
+    """Tạo nông dân mới"""
+    model = Farmer
+    template_name = 'management/farmer_create.html'
+    fields = [
+        'farmer_code', 'name', 'farm_type', 'email', 'phone',
+        'address', 'farm_area', 'main_product', 'crop',
+        'is_active'
+    ]
+    success_url = reverse_lazy('management:farmer_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, f'Tạo nông dân "{form.instance.name}" thành công!')
+        return super().form_valid(form)
+
+
+class FarmerDetailView(LoginRequiredMixin, DetailView):
+    """Chi tiết nông dân"""
+    model = Farmer
+    template_name = 'management/farmer_detail.html'
+    context_object_name = 'farmer'
+
+
+class FarmerUpdateView(LoginRequiredMixin, UpdateView):
+    """Cập nhật nông dân"""
+    model = Farmer
+    template_name = 'management/farmer_edit.html'
+    fields = [
+        'farmer_code', 'name', 'farm_type', 'email', 'phone',
+        'address', 'farm_area', 'main_product', 'crop',
+        'is_active'
+    ]
+    success_url = reverse_lazy('management:farmer_list')
+
+    def form_valid(self, form):
+        messages.success(self.request, f'Cập nhật nông dân "{form.instance.name}" thành công!')
+        return super().form_valid(form)
+
+
+class FarmerDeleteView(LoginRequiredMixin, DeleteView):
+    """Xóa nông dân"""
+    model = Farmer
+    success_url = reverse_lazy('management:farmer_list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Xóa nông dân thành công!')
+        return super().delete(request, *args, **kwargs)
+
+
 
 # Export/Import Views
 def export_data(request, data_type):

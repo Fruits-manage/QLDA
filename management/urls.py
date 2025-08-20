@@ -28,6 +28,13 @@ urlpatterns = [
     path('customers/<int:pk>/edit/', views.CustomerUpdateView.as_view(), name='customer_edit'),
     path('customers/<int:pk>/delete/', views.CustomerDeleteView.as_view(), name='customer_delete'),
     
+    # Farmer URLs 
+    path('farmers/', views.FarmerListView.as_view(), name='farmer_list'),
+    path('farmers/create/', views.FarmerCreateView.as_view(), name='farmer_create'),
+    path('farmers/<int:pk>/', views.FarmerDetailView.as_view(), name='farmer_detail'),
+    path('farmers/<int:pk>/edit/', views.FarmerUpdateView.as_view(), name='farmer_edit'),
+    path('farmers/<int:pk>/delete/', views.FarmerDeleteView.as_view(), name='farmer_delete'),
+
     # Export/Import URLs
     path('export/<str:data_type>/', views.export_data, name='export_data'),
     path('import/', views.import_data, name='import_data'),

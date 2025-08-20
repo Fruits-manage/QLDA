@@ -161,3 +161,34 @@ class Customer(models.Model):
     
     def __str__(self):
         return f"{self.customer_code} - {self.name}"
+    from django.db import models
+
+class Farmer(models.Model): 
+    "models cho nong dan"
+    FARM_TYPE_CHOICES = [
+        ('small', 'Nông hộ nhỏ'),
+        ('medium', 'Nông hộ vừa'),
+        ('large', 'Nông trại lớn'),
+    ]
+
+    
+    farmer_code = models.CharField(max_length=20, unique=True, verbose_name="Mã nông dân")
+    name = models.CharField(max_length=200, verbose_name="Tên nông dân / trang trại")
+    farm_type = models.CharField(max_length=20, choices=FARM_TYPE_CHOICES, verbose_name="Loại hình nông hộ")
+    email = models.EmailField(blank=True, verbose_name="Email")
+    phone = models.CharField(max_length=20, blank=True, verbose_name="Số điện thoại")
+    address = models.TextField(blank=True, verbose_name="Địa chỉ")
+    farm_area = models.FloatField(default=0, verbose_name="Diện tích (ha)")
+    main_product = models.CharField(max_length=100, verbose_name="Sản phẩm")
+    crop = models.CharField(max_length=100, help_text="Loại cây trồng")
+    is_active = models.BooleanField(default=True, verbose_name="Hoạt động")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Ngày tạo")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Ngày cập nhật")
+
+    class Meta:
+        verbose_name = "Nông dân"
+        verbose_name_plural = "Nông dân"
+
+    def __str__(self):
+        return f"{self.farmer_code} - {self.name}"
+

@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'dashboard',
     'utils',
     'management',
+    'farmers'
 ]
 
 MIDDLEWARE = [

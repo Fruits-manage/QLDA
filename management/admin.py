@@ -64,3 +64,28 @@ class CustomerAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         })
     )
+@admin.register(Farmer)
+class FarmerAdmin(admin.ModelAdmin):
+    list_display = ['farmer_code', 'name', 'farm_type', 'phone', 'email', 'main_product', 'farm_area', 'is_active']
+    list_filter = ['farm_type', 'is_active', 'created_at']
+    search_fields = ['farmer_code', 'name', 'email', 'phone', 'main_product', 'crop']
+    readonly_fields = ['created_at', 'updated_at']
+
+    fieldsets = (
+        ('Thông tin cơ bản', {
+            'fields': ('farmer_code', 'name', 'farm_type')
+        }),
+        ('Thông tin liên hệ', {
+            'fields': ('email', 'phone', 'address')
+        }),
+        ('Thông tin sản xuất', {
+            'fields': ('farm_area', 'main_product', 'crop')
+        }),
+        ('Trạng thái', {
+            'fields': ('is_active',)
+        }),
+        ('Thời gian', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )

@@ -14,6 +14,9 @@ if %ERRORLEVEL% NEQ 0 (
 )
 echo.
 
+
+
+
 echo Installing dependencies for Customer portal...
 cd /d "d:\IT\summer-2\QLDA\customer"
 pip install -r requirements.txt

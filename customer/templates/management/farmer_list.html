@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Danh sách Nông dân</h2>
+  <a href="{% url 'management:farmer_create' %}" class="btn btn-success mb-3">+ Thêm Nông dân</a>
+  <table class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Địa chỉ</th>
+        <th>Số điện thoại</th>
+        <th>Ngày tạo</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for farmer in farmers %}
+      <tr>
+        <td>{{ farmer.id }}</td>
+        <td><a href="{% url 'management:farmer_detail' farmer.id %}">{{ farmer.name }}</a></td>
+        <td>{{ farmer.address }}</td>
+        <td>{{ farmer.phone }}</td>
+        <td>{{ farmer.created_at|date:"d/m/Y" }}</td>
+        <td>
+          <a href="{% url 'management:farmer_edit' farmer.id %}" class="btn btn-primary btn-sm">Sửa</a>
+          <a href="{% url 'management:farmer_delete' farmer.id %}" class="btn btn-danger btn-sm">Xóa</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-center">Chưa có nông dân nào</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

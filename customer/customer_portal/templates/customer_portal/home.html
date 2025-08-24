@@ -1,0 +1,133 @@
+{% extends 'base/customer_base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'css/customer.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Search Section -->
+<section class="search-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="search-box">
+                    <form method="get" action="{% url 'customer_portal:product_list' %}" class="row g-3">
+                        <div class="col-md-7">
+                            <input type="text" name="search" class="form-control form-control-lg" 
+                                   placeholder="Tìm kiếm sản phẩm...">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="category" class="form-select form-select-lg">
+                                <option value="">Tất cả</option>
+                                <option value="tropical">Trái cây nhiệt đới</option>
+                                <option value="imported">Trái cây nhập khẩu</option>
+                                <option value="seasonal">Trái cây theo mùa</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Counter -->
+<section class="stats-counter">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_users|default:"27,342" }}</div>
+                    <div class="stat-label">Người dùng</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_products|default:"82,905" }}</div>
+                    <div class="stat-label">Sản phẩm</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_farmers|default:"1,205" }}</div>
+                    <div class="stat-label">Nông dân</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_orders|default:"6,950" }}</div>
+                    <div class="stat-label">Đơn hàng</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest News -->
+<section class="news-section">
+    <div class="container">
+        <h2 class="section-title">Tin tức mới nhất</h2>
+        <div class="row g-4">
+            {% for news in latest_news %}
+            <div class="col-md-4">
+                <div class="card news-card">
+                    {% if news.image %}
+                    <img src="{{ news.image.url }}" class="card-img-top news-image" alt="{{ news.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="news-date">{{ news.created_at|date:"d/m/Y" }}</div>
+                            {% if news.category %}
+                            <span class="news-tag">{{ news.category }}</span>
+                            {% endif %}
+                        </div>
+                        <h5 class="card-title">{{ news.title }}</h5>
+                        <p class="card-text">{{ news.summary|truncatewords:30 }}</p>
+                        <a href="{{ news.get_absolute_url }}" class="btn btn-link text-success p-0">
+                            Đọc tiếp <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="products-section">
+    <div class="container">
+        <h2 class="section-title">Sản phẩm nổi bật</h2>
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-6 col-md-3">
+                <div class="card product-card">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="{% static 'images/no-image.png' %}" class="card-img-top product-image" alt="No image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="product-price mb-3">{{ product.price|floatformat:0 }} VNĐ/{{ product.unit }}</p>
+                        <button class="btn btn-success w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Chưa có sản phẩm nào</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

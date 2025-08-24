@@ -1,0 +1,165 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Danh sách khách hàng{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Search Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="search" placeholder="Tìm kiếm..." value="{{ request.GET.search }}">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="location">
+                        <option value="">Chọn địa điểm</option>
+                        {% for location in locations %}
+                        <option value="{{ location.id }}" {% if request.GET.location == location.id|stringformat:"s" %}selected{% endif %}>
+                            {{ location.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="category">
+                        <option value="">Tất cả danh mục</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100">Tìm kiếm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h2>{{ total_users }}</h2>
+                    <p class="mb-0">Người dùng</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h2>{{ total_contacts }}</h2>
+                    <p class="mb-0">Liên hệ</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h2>{{ total_companies }}</h2>
+                    <p class="mb-0">Công ty</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <h2>{{ total_products }}</h2>
+                    <p class="mb-0">Sản phẩm</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer List Section -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Danh sách khách hàng</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Tên khách hàng</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th>Ngày tham gia</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                        <tr>
+                            <td>
+                                {% if customer.avatar %}
+                                    <img src="{{ customer.avatar.url }}" alt="Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px;">
+                                {% endif %}
+                                {{ customer.get_full_name }}
+                            </td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.phone }}</td>
+                            <td>{{ customer.address }}</td>
+                            <td>{{ customer.created_at|date:"d/m/Y" }}</td>
+                            <td>
+                                <a href="{% url 'accounts:customer_detail' customer.id %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'accounts:customer_edit' customer.id %}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">Không có khách hàng nào</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if customers.has_other_pages %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if customers.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ customers.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Trước</a>
+                    </li>
+                    {% endif %}
+
+                    {% for i in customers.paginator.page_range %}
+                    <li class="page-item {% if customers.number == i %}active{% endif %}">
+                        <a class="page-link" href="?page={{ i }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ i }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if customers.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ customers.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Sau</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Initialize select2 for better dropdown experience
+        $('.form-select').select2({
+            theme: 'bootstrap-5'
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - {% if 'customer' in request.build_absolute_uri %}Portal Khách hàng{% elif 'farmer' in
+        request.build_absolute_uri %}Portal Nông dân{% else %}Hệ thống{% endif %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .register-container {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo i {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .portal-info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .row .col-md-6 {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="logo">
+                <i class="fas fa-apple-alt"></i>
+                <h3>Fruit Export System</h3>
+                <div class="portal-info">
+                    {% if 'customer' in request.build_absolute_uri %}
+                    <i class="fas fa-users text-primary"></i>
+                    <strong>Đăng ký Khách hàng</strong>
+                    {% elif 'farmer' in request.build_absolute_uri %}
+                    <i class="fas fa-seedling text-success"></i>
+                    <strong>Đăng ký Nông dân</strong>
+                    {% else %}
+                    <i class="fas fa-cog text-info"></i>
+                    <strong>Đăng ký Hệ thống</strong>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">
+                                <i class="fas fa-user me-2"></i>Tên
+                            </label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">
+                                <i class="fas fa-user me-2"></i>Họ
+                            </label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user-circle me-2"></i>Tên đăng nhập
+                    </label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope me-2"></i>Email
+                    </label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">
+                        <i class="fas fa-phone me-2"></i>Số điện thoại
+                    </label>
+                    <input type="tel" class="form-control" id="phone" name="phone">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="password1" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Mật khẩu
+                            </label>
+                            <input type="password" class="form-control" id="password1" name="password1" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="password2" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Xác nhận mật khẩu
+                            </label>
+                            <input type="password" class="form-control" id="password2" name="password2" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="agree_terms" name="agree_terms" required>
+                    <label class="form-check-label" for="agree_terms">
+                        Tôi đồng ý với <a href="#" class="text-decoration-none">điều khoản sử dụng</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-register">
+                    <i class="fas fa-user-plus me-2"></i>Đăng ký
+                </button>
+            </form>
+
+            <div class="login-link">
+                <p class="mb-0">Đã có tài khoản?</p>
+                <a href="{% url 'accounts:login' %}" class="text-decoration-none">
+                    <i class="fas fa-sign-in-alt me-1"></i>Đăng nhập ngay
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

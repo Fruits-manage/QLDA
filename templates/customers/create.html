@@ -1,0 +1,142 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Thêm khách hàng mới{% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'customers:list' %}">Khách hàng</a></li>
+    <li class="breadcrumb-item active">Thêm mới</li>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Thêm khách hàng mới
+                    </h3>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Thông tin cá nhân</h5>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.full_name.id_for_label }}">Tên đầy đủ *</label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.errors %}
+                                        <div class="text-danger">{{ form.full_name.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.phone.id_for_label }}">Điện thoại *</label>
+                                    {{ form.phone }}
+                                    {% if form.phone.errors %}
+                                        <div class="text-danger">{{ form.phone.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}">Email *</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger">{{ form.email.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Thông tin địa chỉ</h5>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.province.id_for_label }}">Tỉnh/Thành phố *</label>
+                                    {{ form.province }}
+                                    {% if form.province.errors %}
+                                        <div class="text-danger">{{ form.province.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.district.id_for_label }}">Quận/Huyện *</label>
+                                    {{ form.district }}
+                                    {% if form.district.errors %}
+                                        <div class="text-danger">{{ form.district.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.ward.id_for_label }}">Phường/Xã *</label>
+                                    {{ form.ward }}
+                                    {% if form.ward.errors %}
+                                        <div class="text-danger">{{ form.ward.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.address.id_for_label }}">Địa chỉ chi tiết</label>
+                                    {{ form.address }}
+                                    {% if form.address.errors %}
+                                        <div class="text-danger">{{ form.address.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-1"></i>
+                            Tạo khách hàng
+                        </button>
+                        <a href="{% url 'customers:list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times mr-1"></i>
+                            Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-control {
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        width: 100%;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    .form-check-input {
+        margin-top: 0.3rem;
+    }
+    h5 {
+        color: #495057;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0.5rem;
+    }
+</style>
+
+<script>
+// Thêm thông tin tooltip cho membership level
+document.addEventListener('DOMContentLoaded', function() {
+    const membershipSelect = document.querySelector('#{{ form.membership_level.id_for_label }}');
+    if (membershipSelect) {
+        membershipSelect.addEventListener('change', function() {
+            // Có thể thêm logic để hiển thị thông tin về hạng thành viên được chọn
+        });
+    }
+});
+</script>
+{% endblock %}
